@@ -15,7 +15,7 @@ router.get('/hotel', adminController.viewHotel);
 // endpoint bank
 router.get('/bank', adminController.viewBank);
 router.post('/bank', uploadSingle, adminController.addBank);
-router.put('/bank', adminController.editBank);
+router.put('/bank', uploadSingle, adminController.editBank);
 router.delete('/bank/:id',adminController.deleteBank);
 
 // endpoint booking

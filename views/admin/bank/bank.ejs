@@ -26,8 +26,8 @@
                     <!-- Modal -->
                    <%- include('add_bank.ejs')%>
                    <%- include('edit_bank.ejs')%>
-                    <div class="bg-white w-[530px] mt-10">
-                        <table class="text-left w-[530px] border-collapse" id="dataTable"> <!--Border collapse doesn't work on this site yet but it's available in newer tailwind versions -->
+                    <div class="bg-white w-auto mt-10">
+                        <table class="text-left w-full border-collapse" id="dataTable"> <!--Border collapse doesn't work on this site yet but it's available in newer tailwind versions -->
                             <thead>
                                 <tr>
                                     <th class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light">No.</th>
@@ -46,12 +46,12 @@
                                         <td class="py-4 px-6 border-b border-grey-light"><%= bank[i].numberBank%></td>
                                         <td class="py-4 px-6 border-b border-grey-light"><%= bank[i].name%></td>
                                         <td>
-                                            <img src="" alt="">
+                                            <img src="http://localhost:5500/<%= bank[i].imageUrl%>" alt="" class="w-[80px]">
                                         </td>
                                         <td>
                                             <form action="/admin/bank/<%= bank[i].id%>?_method=DELETE" method="POST">
                                             <button type="submit" class="px-6 py-2.5 bg-red-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-red-700 hover:shadow-lg focus:bg-red-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">Delete</button> 
-                                             <a href="javascript:void()" class=" button-update px-6 py-2.5 bg-black text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-black hover:shadow-lg focus:bg-black-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-black-800 active:shadow-lg transition duration-150 ease-in-out" data-id="<%= bank[i].id%>" data-name="<%= bank[i].name%>" >Update</a>
+                                             <a href="javascript:void()" class=" button-update px-6 py-2.5 bg-black text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-black hover:shadow-lg focus:bg-black-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-black-800 active:shadow-lg transition duration-150 ease-in-out" data-id="<%= bank[i].id%>" data-nameBank="<%= bank[i].nameBank%>" data-numberBank="<%= bank[i].numberBank%>" data-name="<%= bank[i].name%>" >Update</a>
                                     </form>
                                         </td>
                                     </tr>
@@ -76,9 +76,13 @@
     <script>
         $('#dataTable').on('click', '.button-update', function(){
             let id = $(this).data('id');
+            let nameBank = $(this).data('namebank');
+            let numberBank = $(this).data('numberbank');
             let name = $(this).data('name');
             $('#updateModal').modal('show');
             $('.id').val(id);
+            $('.nameBank').val(nameBank);
+            $('.numberBank').val(numberBank);
             $('.name').val(name);
         })
     </script>
