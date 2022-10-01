@@ -1,5 +1,7 @@
 const Category = require('../models/Category');
 const Bank = require('../models/Bank');
+const Item = require('../models/Item');
+const Image = require('../models/Image');
 const fs = require('fs-extra');
 const path = require('path');
 
@@ -66,8 +68,52 @@ module.exports = {
         }
     },
 
-    viewHotel :(req, res) => {
-        res.render('admin/hotel/hotel');
+    viewItem : async(req, res) => {
+        try {
+            const category = await Category.find();
+            const item = await Item.find();
+            // console.log(category);
+            const alertMessage = req.flash('alertMessage');
+            const alertStatus = req.flash('alertStatus');
+            const alert = {message: alertMessage, status : alertStatus};
+            res.render('admin/item/item', {
+                category,
+                item,
+                alert
+            });
+        } catch (error) {
+            res.render('admin/item/item');
+        }
+    },
+
+    addItem : async(req, res) => {
+       try {
+        const {categoryId, title, price, desc, city} = req.body;
+            if(req.files.length > 0){
+                const category = await Category.findOne({_id : categoryId});
+                const newItem = {
+                    categoryId,
+                    title,
+                    desc,
+                    price,
+                    city
+                }
+                const item = await Item.create(newItem);
+                category.itemId.push({_id : item._id});
+                await category.save();
+                for(let i=0; i < req.files.length; i++){
+                    const imageSave = await Image.create({imageUrl : `images/${req.files[i].filename}`});
+                    item.imageId.push({_id :imageSave._id});
+                    await item.save();
+                }
+                req.flash('alertMessage', 'Success add Item');
+                req.flash('alertStatus', success);
+                res.redirect('/admin/item');  
+            }
+       } catch (error) {
+            req.flash('alertStatus', 'danger');
+            res.redirect('/admin/item');  
+       }
     },
 
     // Endpoint Bank

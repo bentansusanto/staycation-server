@@ -1,0 +1,91 @@
+<%- include('../../header.ejs') %>
+
+    <%- include('../../sidebar.ejs')%>
+
+    <div class="relative w-full flex flex-col h-screen overflow-y-hidden">
+        <!-- Desktop Header -->
+        
+        <!-- Mobile Header & Nav -->
+        <%- include('../../navbar.ejs') %>
+    
+        <div class="w-full h-screen overflow-x-hidden border-t flex flex-col">
+            <main class="w-full flex-grow p-6">
+
+                <!-- Content goes here! 😁 -->
+                <!-- Button trigger modal -->
+                    <button type="button" class="px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out" data-bs-toggle="modal" data-bs-target="#addModal"> Add Hotel
+                    </button>
+
+                    <!-- Message -->
+                    <% if(alert.message != ""){%>
+                        <div class="bg-green-100 rounded-lg py-5 px-6 mb-4 mt-5 text-base text-green-700 mb-3 alert-<%= alert.status %>" role="alert">
+                            <%= alert.message %>
+                          </div>
+                    <%}%>
+
+                    <!-- Modal -->
+                   <%- include('add_item.ejs')%>
+                   <%- include('edit_item.ejs')%>
+                    <div class="bg-white w-full mt-10">
+                        <table class="text-left w-full border-collapse" id="dataTable"> <!--Border collapse doesn't work on this site yet but it's available in newer tailwind versions -->
+                            <thead>
+                                <tr>
+                                    <th class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light">No.</th>
+                                    <th class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light">Title</th>
+                                    <th class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light">Price</th>
+                                    <th class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light">City</th>
+                                    <th class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light">Category</th>
+                                    <th class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light">Image</th>
+                                    <th class="py-4 px-6 bg-grey-lightest font-bold uppercase text-sm text-grey-dark border-b border-grey-light">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% for(let i=0; i < item.length; i++){%>
+                                    <tr class="hover:bg-grey-lighter">
+                                        <td class="py-4 px-6 border-b border-grey-light"><%=i+1%></td>
+                                        <td class="py-4 px-6 border-b border-grey-light"><%= item[i].title%></td>
+                                        <td class="py-4 px-6 border-b border-grey-light">$<%= item[i].price%></td>
+                                        <td class="py-4 px-6 border-b border-grey-light"><%= item[i].city%></td>
+                                        <td class="py-4 px-6 border-b border-grey-light"><%= category[i].name%></td>
+                                        <td class="py-4 px-6">
+                                            <img src="http://localhost:5500/<%= item[i].image%>" alt="" class="w-[80px]">
+                                        </td>
+                                        <td>
+                                            <form action="/admin/category/<%= category[i].id%>?_method=DELETE" method="POST">
+                                            <button type="submit" class="px-6 py-2.5 bg-red-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-red-700 hover:shadow-lg focus:bg-red-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">Delete</button> 
+                                             <a href="javascript:void()" class=" button-update px-6 py-2.5 bg-black text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-black hover:shadow-lg focus:bg-black-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-black-800 active:shadow-lg transition duration-150 ease-in-out" data-id="<%= category[i].id%>" data-name="<%= category[i].name%>" >Update</a>
+                                    </form>
+                                        </td>
+                                    </tr>
+                                <%}%>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+    
+            <%- include('../../footer.ejs')%>
+        </div>
+        
+    </div>
+
+    <!-- AlpineJS -->
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+    <!-- Font Awesome -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js" integrity="sha256-KzZiKy0DWYsnwMF+X1DvQngQ2/FxF7MF3Ff72XcpuPs=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tw-elements/dist/js/index.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script>
+        CKEDITOR.replace( 'desc' );
+    </script>
+    <script>
+        $('#dataTable').on('click', '.button-update', function(){
+            let id = $(this).data('id');
+            let name = $(this).data('name');
+            $('#updateModal').modal('show');
+            $('.id').val(id);
+            $('.name').val(name);
+        })
+    </script>
+</body>
+</html>

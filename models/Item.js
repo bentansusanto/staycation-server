@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
+const { ObjectId } = mongoose.Schema;
 
-const categorySchema = new mongoose.Schema({
+const itemSchema = new mongoose.Schema({
     title : {
         type : String,
         required : [true, 'Tolong title diinput']
@@ -24,6 +25,10 @@ const categorySchema = new mongoose.Schema({
         type : String,
         required : true
     },
+    categoryId : {
+        type : ObjectId,
+        ref : 'Category'
+    },
     imageId : [{
         type : ObjectId,
         ref : 'Image'
@@ -38,4 +43,4 @@ const categorySchema = new mongoose.Schema({
     }],
 })
 
-module.exports = mongoose.model('Item', categorySchema);
+module.exports = mongoose.model('Item', itemSchema);
